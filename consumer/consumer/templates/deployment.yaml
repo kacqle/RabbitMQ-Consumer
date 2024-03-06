@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer
+  namespace: rabbitmq
+  labels:
+    app: consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer
+  template:
+    metadata:
+      labels:
+        app: consumer
+    spec:
+      serviceAccountName: consumer-secret-reader
+      containers:
+      - name: consumer
+        image: kacqle/consumer:lastest22
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: dockerhub-consumer-secret
+      resources:
+        limits:
+          cpu: "1"
+          memory: "1Gi"
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
